@@ -1,37 +1,43 @@
-import { useState } from 'react'
-import './App.css'
-import { BentoGrid } from './components/BentoGrid'
-import { Footer } from './components/Footer'
-import { Header } from './components/Header'
-import { Sidebar } from './components/Sidebar'
-import Vinheta from './components/Vinheta'
+// src/App.tsx
+import './App.css';
 
-function App() { const [sidebarOpen, setSidebarOpen] = useState(false)
+import { BentoGrid } from './components/BentoGrid';
+import { Footer } from './components/Footer';
+import { Header } from './components/Header';
+import Vinheta from './components/Vinheta';
+import { AppSidebar } from './components/app-sidebar';
 
-return ( <div className="h-full grid grid-rows-[auto_1fr_auto]">
-  <Header onToggleSidebar={()=> setSidebarOpen((v) => !v)} />
+import { SidebarProvider, SidebarInset } from '@/components/animate-ui/radix/sidebar';
 
-    <div className="grid md:grid-cols-[18rem_1fr] h-[calc(100dvh-3.5rem)] md:h-auto">
-      <Sidebar open={sidebarOpen} onClose={()=> setSidebarOpen(false)} />
+export default function App() {
+	return (
+		<SidebarProvider>
+			{/* El sidebar se monta aquí (fuera del flujo), Animate UI lo posiciona */}
+			<AppSidebar />
 
-        <main className="p-4 md:p-6 lg:p-8 overflow-y-auto">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {/* Hero */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Bienvenido, Fher</h1>
-                <p className="text-mid-500">Panel principal</p>
-              </div>
-              <Vinheta />
-            </div>
-            <BentoGrid />
-          </div>
-        </main>
-    </div>
+			{/* SidebarInset aplica el padding/offset correcto al contenido */}
+			<SidebarInset>
+				<div className='h-full grid grid-rows-[auto_1fr_auto]'>
+					<Header />
 
-    <Footer />
-</div>
+					<main className='p-6 overflow-y-auto'>
+						<div className='max-w-7xl mx-auto space-y-6'>
+							<div className='flex items-center justify-between'>
+								<h1
+									className='text-2xl font-bold'
+									style={{ color: 'var(--fg)' }}>
+									Bienvenido
+								</h1>
+								<Vinheta />
+							</div>
 
-) }
+							<BentoGrid />
+						</div>
+					</main>
 
-export default App
+					<Footer />
+				</div>
+			</SidebarInset>
+		</SidebarProvider>
+	);
+}
